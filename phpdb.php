@@ -28,7 +28,6 @@ if(isset($_GET["table"])) {
 
 ?>
 
-<!DOCTYPE html>
 <html>
 <head>
     <title>Display Table Data</title>
@@ -65,44 +64,39 @@ if(isset($_GET["table"])) {
     ?>
 </select>
 
+<!-- "OK" button to confirm table selection -->
+<button id="okButton" style="display: none;" onclick="confirmTableSelection()">OK</button>
+
 <!-- Display selected table data -->
-<div id="tableDataContainer">
-    <?php
-    // Check if table data is available
-    if(isset($tableData)) {
-        // Display table data in an HTML table
-        echo "<table>";
-        // Display table header
-        echo "<tr>";
-        foreach($tableData[0] as $column => $value) {
-            echo "<th>$column</th>";
-        }
-        echo "</tr>";
-        // Display table rows
-        foreach($tableData as $row) {
-            echo "<tr>";
-            foreach($row as $value) {
-                echo "<td>$value</td>";
-            }
-            echo "</tr>";
-        }
-        echo "</table>";
-    }
-    ?>
-</div>
+<div id="tableDataContainer"></div>
 
 <script>
 function showTableData() {
     var tableName = document.getElementById("tableSelect").value;
     if (tableName !== "") {
-        // Redirect to the same page with the selected table as a URL parameter
-        window.location.href = "display_table.php?table=" + tableName;
+        // Show the "OK" button
+        document.getElementById("okButton").style.display = "inline-block";
     } else {
+        // Hide the "OK" button if no table is selected
+        document.getElementById("okButton").style.display = "none";
         // Clear the tableDataContainer if no table is selected
         document.getElementById("tableDataContainer").innerHTML = "";
+    }
+}
+
+function fetchTableData(tableName) {
+    // Fetch table data 
+}
+
+function confirmTableSelection() {
+    var tableName = document.getElementById("tableSelect").value;
+    if (tableName !== "") {
+        // Fetch table data if a table is selected
+        fetchTableData(tableName);
     }
 }
 </script>
 
 </body>
 </html>
+
