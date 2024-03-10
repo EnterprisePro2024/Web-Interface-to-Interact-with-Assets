@@ -18,23 +18,19 @@
 
 <?php
 
-// MySQL hostname
+// Database credentials
 $hostname = 'localhost';
-
-// MySQL username
 $username = 'adam';
-
-// MySQL password
 $password = 'YES';
 
 try {
-    // Connect to MySQL database using PDO
+    // Connect to the database
     $conn = new PDO("mysql:host=$hostname;dbname=assets", $username, $password);
-    // Set PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Check if the form is submitted
     if(isset($_POST["submit"])) {
+        // File upload settings
         $target_dir = "uploads/";
         $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
         $uploadOk = 1;
@@ -53,7 +49,6 @@ try {
             if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
                 echo "The file ". basename($_FILES["fileToUpload"]["name"]). " has been uploaded.";
 
-             
                 // Read the CSV file and insert data into the table
                 $file = fopen($target_file, "r");
                 $header = fgetcsv($file); // Get the header row
@@ -63,14 +58,16 @@ try {
                     return str_replace(' ', '_', trim($column));
                 }, $header);
 
-               // Prepare the CREATE TABLE statement
-                $tableName = "csv_" . date("Ymd_His");
-                $sqlCreateTable = "CREATE TABLE IF NOT EXISTS $tableName (";
+                // Prepare the table name
+                $fileNameWithoutExtension = pathinfo($_FILES["fileToUpload"]["name"], PATHINFO_FILENAME);
+                $tableName = str_replace(' ', '_', $fileNameWithoutExtension);
+
+                // Create the table if it doesn't exist
+                $sqlCreateTable = "CREATE TABLE IF NOT EXISTS `$tableName` (";
                 foreach ($columns as $column) {
-                    $sqlCreateTable .= "`$column` VARCHAR(255), "; // Assuming all columns are of VARCHAR type
+                    $sqlCreateTable .= "`$column` VARCHAR(255), ";
                 }
                 $sqlCreateTable = rtrim($sqlCreateTable, ", ") . ")";
-                // Execute the CREATE TABLE statement
                 $conn->exec($sqlCreateTable);
 
                 // Prepare the INSERT statement
@@ -78,25 +75,19 @@ try {
                 $sqlInsert = "INSERT INTO `$tableName` (`" . implode("`, `", $columns) . "`) VALUES ($placeholders)";
                 $stmt = $conn->prepare($sqlInsert);
 
-
                 // Read CSV file and insert data into the table
-                // Skip the header row
-                fgetcsv($file);
+                fgetcsv($file); // Skip the header row
                 while (($data = fgetcsv($file)) !== FALSE) {
-                    // Ensure the number of values matches the number of columns
                     if (count($data) != count($columns)) {
                         die("Error: Number of columns in CSV does not match the number of columns in the table");
                     }
 
-                    // Bind parameters and execute the statement
                     if (!$stmt->execute($data)) {
                         die("Error inserting data: " . $stmt->errorInfo()[2]);
                     }
                 }
 
                 fclose($file);
-
-                // Close the database connection
                 $conn = null;
 
             } else {
@@ -105,8 +96,6 @@ try {
         }
     }
 } catch(PDOException $e) {
-    // Catch and display any PDO connection errors
     echo $e->getMessage();
 }
 ?>
-
