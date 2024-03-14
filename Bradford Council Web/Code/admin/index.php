@@ -8,10 +8,6 @@
    $conn1 = new mysqli($servername, $username, $password, $dbname);
 session_start();
 
-if ($_SESSION['type'] !== 'Admin'){
-    header('Location: ../login.php');
-    exit(); // Ensure script stops executing after redirecting
-}
 ob_start();
 ?>
 <html  lang="en">
