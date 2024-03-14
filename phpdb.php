@@ -99,6 +99,13 @@ try {
     } elseif ($tableName !== "") {
         echo "No data available in table: $tableName";
     }
+    $servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "assets";
+
+// Create connection
+$conn1 = new mysqli($servername, $username, $password, $dbname);
     ?>
 </div>
 
