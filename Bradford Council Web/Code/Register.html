@@ -18,20 +18,20 @@
 
     <div class="log">
         <form action="register.php" method="post">
-            <label class="placeholder">Forename</label>
-            <input class="log input" type="text" name="forename"></input>
-            <label class="placeholder">Surname</label>
-            <input class="log input" type="text" name="surname"></input>
-            <label class="placeholder">Email</label>
-            <input class="log input" type="email" name="email"></input>
+    <label class="placeholder">Forename</label>
+            <input class="log input" type="text" name="forename" maxlength="15"></input>
+            <label class="placeholder">Surname</label> 
+            <input class="log input" type="text" name="surname" maxlength="15"></input>
+            <label class="placeholder">Email</label> 
+            <input class="log input" type="email" name="email" maxlength="30"></input>
             <label class="placeholder">Password</label>
-            <input class="log input" type="text" name="password"></input>
+            <input class="log input" type="text" name="password" minlength="8"></input>
             <label class="placeholder">Department</label>
             <select class="log input" name="department">
                 <option value="" disabled selected>Department</option>
-                <option value="HR">HR</option>
-                <option value="IT">IT</option>
-                <option value="Finance">Finance</option>
+                <option value="Housing">Housing</option>
+                <option value="Education and Skills">Education and Skills</option>
+                <option value="Transport and Roads">Transport and Roads</option>
             </select>
             <button class="log button" type="submit">Register</button>
         </form>
