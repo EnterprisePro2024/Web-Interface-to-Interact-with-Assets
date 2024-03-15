@@ -104,7 +104,9 @@ ob_start();
 <body>
   
     <div class="page-container">
-       
+    <a href="index.php">
+        <img src="bradford-council-logo.png" class="logo" />
+    </a>
         <div class="main-content-inner">
             <div class="row">
                 <div class="col-lg-12 mt-5">
