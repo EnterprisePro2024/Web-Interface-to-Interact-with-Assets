@@ -46,7 +46,7 @@ ob_start();
   
     <div class="page-container">
         <?php
-        include('nav.php');
+        
         ?>
         <br>
         <div class="main-content-inner">
