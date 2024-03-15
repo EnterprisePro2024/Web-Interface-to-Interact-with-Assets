@@ -4,7 +4,7 @@ $connection = mysqli_connect('localhost', 'root');
 if ($connection === false) {
     die("ERROR: Could not connect. " . mysqli_connect_error());
 }
-
+// TEst
 mysqli_select_db($connection, "bradford");
 
 $fname = "";
