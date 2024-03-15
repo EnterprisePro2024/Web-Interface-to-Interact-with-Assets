@@ -1,41 +1,67 @@
 <?php
-$connection = mysqli_connect('localhost', 'root');
+require_once("includes/setup.php");
 
-if ($connection === false) {
-    die("ERROR: Could not connect. " . mysqli_connect_error());
-}
 
-mysqli_select_db($connection, "bradford");
-
-$fname = "";
-$sname = "";
-$email = "";
-$password = "";
-$department = "";
-
-if (isset($_POST['forename'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fname = $_POST['forename'];
+    $sname = $_POST['surname'];;
+    $email = $_POST['email'];;
+    $password = $_POST['password'];;
+    $department = $_POST['department'];;
+    if (!empty($fname) && !empty($sname) && !empty($email) && !empty($password) && !empty($department)) {
+        $query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department`) VALUES ('$fname', '$sname', '$email', '$password', '$department')";
+        
+        if (mysqli_query($connection, $query)) {
+            header("Location: home.php");
+        } else {
+            echo "ERROR: Could not able to execute $query. " . mysqli_error($connection);
+        }
+    
+        // Close connection
+        mysqli_close($connection);  
+    }
 }
-if (isset($_POST['surname'])) {
-    $sname = $_POST['surname'];
-}
-if (isset($_POST['email'])) {
-    $email = $_POST['email'];
-}
-if (isset($_POST['password'])) {
-    $password = $_POST['password'];
-}
-if (isset($_POST['department'])) {
-    $department = $_POST['department'];
-}
+?>
 
-$query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department`) VALUES ('$fname', '$sname', '$email', '$password', '$department')";
+<!DOCTYPE html>
+<html lang="en">
 
-if (mysqli_query($connection, $query)) {
-    header("Location: Register.html");
-} else {
-    echo "ERROR: Could not able to execute $query. " . mysqli_error($connection);
-}
+<head>
+    <Title>Register|Bradford Council</Title>
+    <link rel="stylesheet" href="/assets/stylesheet.css">
+</head>
 
-// Close connection
-mysqli_close($connection);
+<body class="main">
+
+    <?php require_once("includes/navbar.php"); ?>
+
+    <div class="log">
+        <form action="register.php" method="post">
+    <label class="placeholder">Forename</label>
+            <input class="log input" type="text" name="forename" maxlength="15"></input>
+            <label class="placeholder">Surname</label> 
+            <input class="log input" type="text" name="surname" maxlength="15"></input>
+            <label class="placeholder">Email</label> 
+            <input class="log input" type="email" name="email" maxlength="30"></input>
+            <label class="placeholder">Password</label>
+            <input class="log input" type="text" name="password" minlength="8"></input>
+            <label class="placeholder">Department</label>
+            <select class="log input" name="department">
+                <option value="" disabled selected>Department</option>
+                <option value="Housing">Housing</option>
+                <option value="Education and Skills">Education and Skills</option>
+                <option value="Transport and Roads">Transport and Roads</option>
+            </select>
+            <button class="log button" type="submit">Register</button>
+        </form>
+
+    </div>
+
+    <div class="register-text">
+        Created an account? <a href="Login.html">Log in here</a>
+    </div>
+
+</body>
+
+<?php require_once("includes/footer.php"); ?>
+

@@ -130,6 +130,33 @@ nav ul li a:hover {
     text-align: justify;
 }
 
+.faq {
+    height: 100%;
+}
+
+.faq_answer {
+    margin-bottom: 30px; 
+}
+
+.faq_question {
+    margin-bottom: 20px; 
+}
+
+
+.faq_question {
+    font-family: Arial, sans-serif; 
+    color: rgb(22, 22, 163); 
+    font-size: 18px; 
+    font-weight: bold;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
 .footer1 {
     border: none;
     padding: 20px 20px 10px 20px;

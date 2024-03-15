@@ -1,46 +1,15 @@
+<?php require_once("includes/setup.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <Title>FAQs|Bradford Council</Title>
-    <link rel="stylesheet" href="stylesheet.css">
-    <style>
-        
-        .faq_answer {
-            margin-bottom: 30px; 
-        }
-
-        .faq_question {
-            margin-bottom: 20px; 
-        }
-        
-        
-        .faq_question {
-            font-family: Arial, sans-serif; 
-            color: rgb(22, 22, 163); 
-            font-size: 18px; 
-            font-weight: bold;
-        }
-    
-    </style>
+    <link rel="stylesheet" href="/assets/stylesheet.css">
 </head>
 
 <body class="main">
-    
-    <nav>
-        
-        <a href="Home.html">
-            <img src="/assets/logo.png" class="logo" />
-        </a>
-      
-        <ul>
-            <li><a href="Home.html">Home</a></li>
-            <li><a href="Assets.html">Assets</a></li>
-            <li><a href="LogIn.html">Log In</a></li>
-            <li><a href="Register.html">Register</a></li>
-            <li><a href="FAQs.html">FAQs</a></li>
-        </ul>
-    </nav>
+    <?php require_once("includes/navbar.php"); ?>
+
 
     <div class="faq_container">
         
@@ -103,17 +72,6 @@
     </div>
 </body>
 
-<footer class="footer1">
-    <p>Council Switchboard : 01274 432111</p>
-    <p>Council Address : Britannia House, Hall Ings, Bradford BD1 1HX</p>
-</footer>
-    
-<footer class="footer2">
-    <p>Accessibility Statement | FAQs</p>
-    <p class="p1">&copy; 2024 City Of Bradford Metropolitan District Council</p>
-</footer>
+<?php require_once("includes/footer.php"); ?>
 
-<footer>
-    
-</footer>
 </html>

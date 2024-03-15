@@ -1,15 +1,3 @@
-<?php
-   $servername = "localhost";
-   $username = "root";
-   $password = "";
-   $dbname = "assets";
-   
-   // Create connection
-   $conn1 = new mysqli($servername, $username, $password, $dbname);
-session_start();
-
-ob_start();
-?>
 <html  lang="en">
 
 <head>
