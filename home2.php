@@ -10,7 +10,7 @@
     <nav>
 
         <a href="Home.html">
-            <img src=bradford-council-logo.png class="logo" />
+            <img src="/assets/logo.png" class="logo" />
         </a>
 
         <ul>

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 05, 2024 at 11:29 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: 127.0.0.1:3306
+-- Generation Time: Mar 12, 2024 at 08:22 PM
+-- Server version: 5.7.31
+-- PHP Version: 7.4.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -27,23 +27,24 @@ SET time_zone = "+00:00";
 -- Table structure for table `allotmentlist2017`
 --
 
-CREATE TABLE `allotmentlist2017` (
-  `COL 1` varchar(46) DEFAULT NULL,
-  `COL 2` varchar(18) DEFAULT NULL,
-  `COL 3` varchar(15) DEFAULT NULL,
-  `COL 4` varchar(8) DEFAULT NULL,
-  `COL 5` varchar(9) DEFAULT NULL,
-  `COL 6` varchar(8) DEFAULT NULL,
-  `COL 7` varchar(8) DEFAULT NULL,
-  `COL 8` varchar(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+DROP TABLE IF EXISTS `allotmentlist2017`;
+CREATE TABLE IF NOT EXISTS `allotmentlist2017` (
+  `Allotment` varchar(46) NOT NULL,
+  `Street` varchar(18) DEFAULT NULL,
+  `Locality` varchar(15) DEFAULT NULL,
+  `Latitude` varchar(8) DEFAULT NULL,
+  `Longitude` varchar(9) DEFAULT NULL,
+  `Postcode` varchar(8) DEFAULT NULL,
+  `Town` varchar(8) DEFAULT NULL,
+  `Total plots` varchar(11) DEFAULT NULL,
+  PRIMARY KEY (`Allotment`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `allotmentlist2017`
 --
 
-INSERT INTO `allotmentlist2017` (`COL 1`, `COL 2`, `COL 3`, `COL 4`, `COL 5`, `COL 6`, `COL 7`, `COL 8`) VALUES
-('Allotment', 'Street', 'Locality', 'Latitude', 'Longitude', 'Postcode', 'Town', 'Total plots'),
+INSERT INTO `allotmentlist2017` (`Allotment`, `Street`, `Locality`, `Latitude`, `Longitude`, `Postcode`, `Town`, `Total plots`) VALUES
 ('Abb Scott Lane Allotments', 'Abb Scott Lane', 'Woodside', '53.75496', '-1.775655', 'BD12 0HA', 'Bradford', '25'),
 ('Avenue Road Allotments', 'Avenue Road', 'West Bowling', '53.77584', '-1.746116', 'BD5', 'Bradford', '21'),
 ('Beck Lane Allotments', 'Beck Lane', ' ', '53.85554', '-1.835094', 'BD16', 'Bingley', '43'),
@@ -80,6 +81,81 @@ INSERT INTO `allotmentlist2017` (`COL 1`, `COL 2`, `COL 3`, `COL 4`, `COL 5`, `C
 ('Valley Allotments', 'Queen`s Road', ' ', '53.80958', '-1.755792', 'BD2', 'Bradford', '38'),
 ('Whetley Grove Allotments', 'Whetley Grove', ' ', '53.80220', '-1.781752', 'BD8 9ED', 'Bradford', '15'),
 ('Worthing Head Road Allotments', 'Fairfield Road', 'Wyke', '53.74036', '-1.763748', 'BD12 9PP', 'Bradford', '30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `csv_20240307_161459`
+--
+
+DROP TABLE IF EXISTS `csv_20240307_161459`;
+CREATE TABLE IF NOT EXISTS `csv_20240307_161459` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `csv_20240307_161927`
+--
+
+DROP TABLE IF EXISTS `csv_20240307_161927`;
+CREATE TABLE IF NOT EXISTS `csv_20240307_161927` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `csv_20240307_162146`
+--
+
+DROP TABLE IF EXISTS `csv_20240307_162146`;
+CREATE TABLE IF NOT EXISTS `csv_20240307_162146` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `csv_20240307_163217`
+--
+
+DROP TABLE IF EXISTS `csv_20240307_163217`;
+CREATE TABLE IF NOT EXISTS `csv_20240307_163217` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `forename` varchar(20) NOT NULL,
+  `surname` varchar(20) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` enum('Admin','General User') NOT NULL DEFAULT 'General User',
+  `department` enum('Housing','Education and Skills','Transport and Roads') NOT NULL,
+  `registered_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `role`, `department`, `registered_at`, `status`) VALUES
+('abc', 'abc', 'abc@gmail.com', '123', 'General User', 'Housing', '2024-03-12 19:06:02', 'Verified'),
+('admin', 'admin', 'admin@gmail.com', '123', 'Admin', 'Housing', '2024-03-12 19:06:02', 'Verified');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

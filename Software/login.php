@@ -48,7 +48,7 @@ if ($result) {
         //exit;
     } else {
         // Login failed, redirect to Login.html
-        header("Location: Login.html");
+        header("Location: login.html");
         exit;
     }
 } else {
