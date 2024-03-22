@@ -1,3 +1,15 @@
+<?php
+   $servername = "localhost";
+   $username = "root";
+   $password = "";
+   $dbname = "assets";
+   
+   // Create connection
+   $conn1 = new mysqli($servername, $username, $password, $dbname);
+session_start();
+
+ob_start();
+?>
 <html  lang="en">
 
 <head>
@@ -5,38 +17,93 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/png" href="assets/images/icon/favicon.ico">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/themify-icons.css">
-    <link rel="stylesheet" href="assets/css/metisMenu.css">
-    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="assets/css/slicknav.min.css">
-    <!-- amchart css -->
-    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
-    <!-- others css -->
-      <!-- amcharts css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../assets/stylesheet.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
 
-    <!-- Start datatable css -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.jqueryui.min.css">
-    <link rel="stylesheet" href="assets/css/typography.css">
-    <link rel="stylesheet" href="assets/css/default-css.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/responsive.css">
-    <!-- modernizr css -->
-    <script src="assets/js/vendor/modernizr-2.8.3.min.js"></script>
+        .page-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content-inner {
+            padding: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 3px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            cursor: pointer;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        .fa {
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
-  
+<?php require_once("../includes/navbar.php"); ?>
     <div class="page-container">
-        <?php
-        include('nav.php');
-        ?>
-        <br>
         <div class="main-content-inner">
             <div class="row">
                 <div class="col-lg-12 mt-5">
@@ -155,25 +222,10 @@
                     ?>
                 </div>
 
-           
-    <?php
-    include('footer.php');
-    ?>
+      
 
-    <script src="assets/js/vendor/jquery-2.2.4.min.js"></script>
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/owl.carousel.min.js"></script>
-    <script src="assets/js/metisMenu.min.js"></script>
-    <script src="assets/js/jquery.slimscroll.min.js"></script>
-    <script src="assets/js/jquery.slicknav.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js"></script>
-    <script src="assets/js/plugins.js"></script>
-    <script src="assets/js/scripts.js"></script>
 </body>
 
+<?php require_once("../includes/footer.php"); ?>
 </html>
-   
+
