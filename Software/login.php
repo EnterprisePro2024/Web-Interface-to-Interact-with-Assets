@@ -30,6 +30,7 @@ if ($result) {
         switch ($type) {
             case 'Admin':
                  echo "<script>location.href='../admin/index.php'</script>";
+                 $_SESSION['admin'] = true;
                 exit();
                 break;
                 case 'General User':

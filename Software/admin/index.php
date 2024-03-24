@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['login']) || $_SESSION['login'] == false || $_SESSION['admin'] == false) {
+    header("Location: /home.php");
+ }
+
    $servername = "localhost";
    $username = "root";
    $password = "";
@@ -6,7 +11,7 @@
    
    // Create connection
    $conn1 = new mysqli($servername, $username, $password, $dbname);
-session_start();
+
 
 ob_start();
 ?>

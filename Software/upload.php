@@ -1,5 +1,8 @@
 <?php
 require_once("includes/setup.php");
+if (!isset($_SESSION['login']) || $_SESSION['login'] == false) {
+    header("Location: home.php");
+}
 
 try {
     // Connect to the database
