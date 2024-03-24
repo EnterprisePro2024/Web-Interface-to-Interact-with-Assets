@@ -10,9 +10,9 @@
 <body class="main">
     <?php require_once("includes/navbar.php"); ?>
     
-    <!-- <?php
-   // include ("phpdb2.php")
-    ?> -->
+    <?php
+        include("includes/phpdb.php");
+    ?>
     
 </body>
 

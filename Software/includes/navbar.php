@@ -8,6 +8,7 @@
         <?php
         if (isset($_SESSION['login']) && $_SESSION['login'] == true) { ?>
             <li><a href="/logout.php">Logout</a></li>
+            <li><a href="/upload.php">Upload</a></li>
             <li><a href="/admin/index.php">Admin</a></li>
         <?php } else { ?>
             <li><a href="/login.php">Login</a></li>
