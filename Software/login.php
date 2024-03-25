@@ -81,6 +81,12 @@ mysqli_close($connection);
         Don't have an account? <a href="register.php">Register here</a>
     </div>
 
+    <div class="faqs-text">
+        Have any questions? <a href="faqs.php">Visit FAQS here</a>
+    </div>
+
+    </div>
+
 </body>
 
 <?php require_once("includes/footer.php"); ?>

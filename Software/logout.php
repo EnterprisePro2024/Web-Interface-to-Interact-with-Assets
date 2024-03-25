@@ -2,7 +2,7 @@
 session_start();
 session_destroy();
 session_abort();
-header('location:../home.php');
+header('location:../login.php');
 
 exit();
 ?>
