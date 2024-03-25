@@ -26,8 +26,8 @@ ob_start();
     <link rel="stylesheet" href="../assets/stylesheet.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #ffffff;
             margin: 0;
             padding: 0;
         }
@@ -38,13 +38,18 @@ ob_start();
             padding: 20px;
             background-color: #fff;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .main-content-inner {
             padding: 20px;
         }
 
+        .col-md-6 h2{
+            text-align: center;
+            margin-bottom: 10px;
+            color: 006871;
+
+        }
         .btn {
             display: inline-block;
             padding: 8px 16px;
@@ -76,23 +81,19 @@ ob_start();
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 50px;
         }
 
         th,
         td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #dddddd;
         }
 
         th {
-            background-color: #007bff;
-            color: #fff;
-        }
-
-        tr:hover {
             background-color: #f2f2f2;
+            color: #000000;
         }
 
         .fa {
@@ -113,11 +114,8 @@ ob_start();
             <div class="row">
                 <div class="col-lg-12 mt-5">
                     <div class='row'>
-                        <div class='col-md-6'>
-                            <h2>Add Users</h2>
-                        </div>
-                        <div class='col-md-6 text-right'>
-                            <a href='#' class='btn btn-success'><i class='fa fa-download'></i> Download</a>
+                        <div class='col-md-6 text-center'>
+                            <h2>User Registration Management</h2>
                         </div>
                     </div>
                     <?php
