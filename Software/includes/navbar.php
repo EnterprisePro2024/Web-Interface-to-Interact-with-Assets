@@ -4,7 +4,6 @@
     </a>
     <ul>
         <li><a href="/home.php">Home</a></li>
-        <li><a href="/assets.php">Assets</a></li>
         <?php
         if (isset($_SESSION['login']) && $_SESSION['login'] == true) { ?>
             <li><a href="/upload.php">Upload</a></li>
