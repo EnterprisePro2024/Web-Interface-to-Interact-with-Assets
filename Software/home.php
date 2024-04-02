@@ -1,4 +1,9 @@
-<?php require_once("includes/setup.php"); ?>
+<?php 
+require_once("includes/setup.php");
+if (!isset($_SESSION['login']) || $_SESSION['login'] == false) {
+    header("Location: login.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
