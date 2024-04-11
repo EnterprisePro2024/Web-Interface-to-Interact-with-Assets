@@ -4,7 +4,7 @@
 
 <head>
     <Title>FAQs|Bradford Council</Title>
-    <link rel="stylesheet" href="/assets/stylesheet.css">
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 
 <body class="main">

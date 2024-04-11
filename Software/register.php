@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <Title>Register|Bradford Council</Title>
-    <link rel="stylesheet" href="/assets/stylesheet.css">
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 
 <body class="main">

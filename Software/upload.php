@@ -94,7 +94,7 @@ try {
 <!DOCTYPE html>
 <head>
     <title>Upload CSV File</title>
-    <link rel="stylesheet" href="/assets/stylesheet.css">
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 
 <body class="main">

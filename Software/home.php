@@ -9,7 +9,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] == false) {
 
 <head>
     <Title>Home|Bradford Council</Title>
-    <link rel="stylesheet" href="/assets/stylesheet.css">
+    <link rel="stylesheet" href="stylesheet.css">
 </head>
 
 <body class="main">
