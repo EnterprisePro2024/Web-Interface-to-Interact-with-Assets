@@ -18,8 +18,8 @@
     <?php
         /* Database connection settings */
         $host = 'localhost';
-        $user = 'adam';
-        $pass = 'YES';
+        $user = 'root';
+        $pass = '';
         $db = 'assets';
         $mysqli = new mysqli($host, $user, $pass, $db) or die($mysqli->error);
 
