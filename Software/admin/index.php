@@ -138,8 +138,8 @@ ob_start();
                                             <th>Email</th>
                                             <th>Password</th>
                                             <th>Role</th>
-                                            <th>Department_ID</th>
                                             <th>Registered_at</th>
+                                            <th>Department_ID</th>
                                             <th>Status	</th>
                                             					
 
