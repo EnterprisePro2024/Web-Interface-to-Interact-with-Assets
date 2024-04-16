@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['login']) || $_SESSION['login'] == false || $_SESSION['admin'] == false) {
-    header("Location: /home.php");
+    header("Location: /login.php");
  }
 
    $servername = "localhost";
@@ -131,15 +131,16 @@ ob_start();
                                     <thead>
                                         <tr>
                                          
+                                            <th>User_ID</th>
                                             <th>Forename</th>
                                             
                                             <th>Surname</th>
-                                            <th>email</th>
-                                            <th>password</th>
-                                            <th>role</th>
-                                            <th>department</th>
-                                            <th>registered_at</th>
-                                            <th>status	</th>
+                                            <th>Email</th>
+                                            <th>Password</th>
+                                            <th>Role</th>
+                                            <th>Department_ID</th>
+                                            <th>Registered_at</th>
+                                            <th>Status	</th>
                                             					
 
                                             
@@ -152,15 +153,15 @@ ob_start();
                         while ($row = mysqli_fetch_assoc($result)) {
                             echo "<tr>";
                             		
-                            
+                            echo "<td>{$row['user_id']}</td>";
                             echo "<td>{$row['forename']}</td>";
                             echo "<td>{$row['surname']}</td>";
                             echo "<td>{$row['email']}</td>";
                             echo "<td>{$row['password']}</td>";
 
                             echo "<td>{$row['role']}</td>";
-                            echo "<td>{$row['department']}</td>";
                             echo "<td>{$row['registered_at']}</td>";
+                            echo "<td>{$row['department_id']}</td>";
                             echo "<td>";
 
                             if ($row['status'] == 'Verified') {
