@@ -4,23 +4,41 @@ require_once("includes/setup.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fname = $_POST['forename'];
-    $sname = $_POST['surname'];;
-    $email = $_POST['email'];;
-    $password = $_POST['password'];;
-    $department = $_POST['department'];;
+    $sname = $_POST['surname'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $department = $_POST['department'];
+
+
+    // Query to retrieve department ID based on department name
+$query = "SELECT department_id FROM departments WHERE department = '$department'";
+$result = mysqli_query($connection, $query);
+if ($result && mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $department_id = $row['department_id'];
+} else {
+    echo "ERROR: Could not retrieve department ID.";
+    exit();
+}
+
     if (!empty($fname) && !empty($sname) && !empty($email) && !empty($password) && !empty($department)) {
-        $query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department`) VALUES ('$fname', '$sname', '$email', '$password', '$department')";
+        $query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department_id`) VALUES ('$fname', '$sname', '$email', '$password', '$department_id')";
         
         if (mysqli_query($connection, $query)) {
             header("Location: home.php");
         } else {
             echo "ERROR: Could not able to execute $query. " . mysqli_error($connection);
         }
+        
+    } else {
+            echo "ERROR: Missing required form data.";
+        }
     
         // Close connection
         mysqli_close($connection);  
-    }
+    
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <head>
     <Title>Register|Bradford Council</Title>
-    <link rel="stylesheet" href="stylesheet.css">
+    <link rel="stylesheet" href="/assets/stylesheet.css">
 </head>
 
 <body class="main">
