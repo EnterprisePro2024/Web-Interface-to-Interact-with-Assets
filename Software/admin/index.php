@@ -121,7 +121,7 @@ ob_start();
                     <?php
 
 
-                    $sql = "SELECT * FROM users";
+                    $sql = "SELECT users.*, departments.department AS department FROM users JOIN departments ON users.department_id = departments.department_id;";
                     $result = mysqli_query($conn1, $sql);
 
                     if (mysqli_num_rows($result) > 0) {

@@ -8,8 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];;
     $password = $_POST['password'];;
     $department = $_POST['department'];;
+
     if (!empty($fname) && !empty($sname) && !empty($email) && !empty($password) && !empty($department)) {
-        $query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department`) VALUES ('$fname', '$sname', '$email', '$password', '$department')";
+        $query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department_id`) VALUES ('$fname', '$sname', '$email', '$password', '$department')";
         
         if (mysqli_query($connection, $query)) {
             header("Location: home.php");
@@ -48,9 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="placeholder">Department</label>
             <select class="log input" name="department">
                 <option value="" disabled selected>Department</option>
-                <option value="Housing">Housing</option>
-                <option value="Education and Skills">Education and Skills</option>
-                <option value="Transport and Roads">Transport and Roads</option>
+                <!-- For loop for each department and value=ID and name in the option -->
+                <option value="1">Housing</option>
+                <option value="2">Education and Skills</option>
+                <option value="3">Transport and Roads</option>
             </select>
             <button class="log button" type="submit">Register</button>
         </form>
