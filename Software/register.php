@@ -4,24 +4,41 @@ require_once("includes/setup.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fname = $_POST['forename'];
-    $sname = $_POST['surname'];;
-    $email = $_POST['email'];;
-    $password = $_POST['password'];;
-    $department = $_POST['department'];;
+    $sname = $_POST['surname'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $department = $_POST['department'];
+
+
+    // Query to retrieve department ID based on department name
+$query = "SELECT department_id FROM departments WHERE department = '$department'";
+$result = mysqli_query($connection, $query);
+if ($result && mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $department_id = $row['department_id'];
+} else {
+    echo "ERROR: Could not retrieve department ID.";
+    exit();
+}
 
     if (!empty($fname) && !empty($sname) && !empty($email) && !empty($password) && !empty($department)) {
-        $query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department_id`) VALUES ('$fname', '$sname', '$email', '$password', '$department')";
+        $query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department_id`) VALUES ('$fname', '$sname', '$email', '$password', '$department_id')";
         
         if (mysqli_query($connection, $query)) {
             header("Location: home.php");
         } else {
             echo "ERROR: Could not able to execute $query. " . mysqli_error($connection);
         }
+        
+    } else {
+            echo "ERROR: Missing required form data.";
+        }
     
         // Close connection
         mysqli_close($connection);  
-    }
+    
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -49,10 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label class="placeholder">Department</label>
             <select class="log input" name="department">
                 <option value="" disabled selected>Department</option>
-                <!-- For loop for each department and value=ID and name in the option -->
-                <option value="1">Housing</option>
-                <option value="2">Education and Skills</option>
-                <option value="3">Transport and Roads</option>
+                <option value="Housing">Housing</option>
+                <option value="Education and Skills">Education and Skills</option>
+                <option value="Transport and Roads">Transport and Roads</option>
             </select>
             <button class="log button" type="submit">Register</button>
         </form>
