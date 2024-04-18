@@ -23,7 +23,8 @@ if ($result) {
         session_start(); 
         $type=$row['role'];
         $_SESSION['login'] = true;
-       
+
+        $_SESSION['user_id'] = $row['user_id']; 
         $_SESSION['email'] = $row['email'];
         $_SESSION['type'] = $row['role'];
 
@@ -37,18 +38,13 @@ if ($result) {
                     echo "<script>location.href='home.php'</script>";
                    exit();
                    break;
-            // Add more cases if needed
         }
-        // Login successful, redirect to Home.html
-        //header("Location: Home.html");
-        //exit;
-    } else {
-        // Login failed, redirect to Login.html
-     
     }
+        
 } else {
     echo "ERROR: Could not able to execute $query. " . mysqli_error($connection);
 }
+
 
 // Close connection
 mysqli_close($connection);
@@ -90,3 +86,4 @@ mysqli_close($connection);
 </body>
 
 <?php require_once("includes/footer.php"); ?>
+
