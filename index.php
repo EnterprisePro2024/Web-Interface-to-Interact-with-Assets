@@ -11,6 +11,7 @@
     <h4>Search Markers</h4>
     <input type="text" id="searchInput" placeholder="Search...">
     <button onclick="searchMarkers()">Search</button>
+    <button onclick="resetMarkers()">Reset</button> <!-- Added reset button -->
 </div>
 
 <div id="map" style="width: 100%; height: 80vh;"></div>
@@ -84,6 +85,7 @@ if (!empty($markers)) {
 
 <script>
     var map;
+    var allMarkers = []; // Array to hold all markers
 
     function initMap() {
         var mapOptions = {
@@ -104,6 +106,8 @@ if (!empty($markers)) {
                 map: map,
                 title: "Marker"
             });
+
+            allMarkers.push(marker); // Add marker to allMarkers array
 
             var contentString = '<div style="width: 200px; height:200px;">';
             contentString += '<h3>' + markerData.table + '</h3>';
@@ -153,6 +157,8 @@ if (!empty($markers)) {
                     title: "Marker"
                 });
 
+                allMarkers.push(marker); // Add marker to allMarkers array
+
                 var contentString = '<div style="width: 200px; height:200px;">';
                 contentString += '<h3>' + markerData.table + '</h3>';
                 contentString += '<ul>';
@@ -182,14 +188,23 @@ if (!empty($markers)) {
         }
     }
 
+    function resetMarkers() {
+        // Clear existing markers from the map
+        clearMarkers();
+        
+        // Display all markers again
+        displayMarkers();
+    }
+
     function clearMarkers() {
         // Loop through all markers and remove them from the map
-        markers.forEach(function(marker) {
+        allMarkers.forEach(function(marker) {
             marker.setMap(null);
         });
+        // Reset the allMarkers array
+        allMarkers = [];
     }
 </script>
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-dFHYjTqEVLndbN2gdvXsx09jfJHmNc8&callback=initMap"></script>
 </body>
-</html>
