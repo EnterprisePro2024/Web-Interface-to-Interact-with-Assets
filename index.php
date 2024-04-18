@@ -6,11 +6,16 @@
     <title>Map | View</title>
 </head>
 <body>
-    
 
-    <div id="map" style="width: 100%; height: 80vh;"></div>
+<div id="searchOptions">
+    <h4>Search Markers</h4>
+    <input type="text" id="searchInput" placeholder="Search...">
+    <button onclick="searchMarkers()">Search</button>
+</div>
 
-    <?php
+<div id="map" style="width: 100%; height: 80vh;"></div>
+
+<?php
 /* Database connection settings */
 $host = 'localhost';
 $user = 'adam';
@@ -26,11 +31,11 @@ $result = $mysqli->query($query) or die('Error fetching tables: ' . $mysqli->err
 
 while ($row = mysqli_fetch_array($result)) {
     $table = $row[0];
-    
+
     // Check if the table has latitude and longitude columns
-    $query = "SHOW COLUMNS FROM `$table` WHERE Field LIKE '%latitude%' OR Field LIKE '%longitude%'";
+    $query = "SHOW COLUMNS FROM `$table` WHERE Field REGEXP 'latitude|longitude'"; // Use regular expression
     $columnsResult = $mysqli->query($query);
-    
+
     // If latitude and longitude columns exist
     if ($columnsResult->num_rows > 0) {
         // Fetch latitude and longitude data
@@ -38,11 +43,12 @@ while ($row = mysqli_fetch_array($result)) {
         $longitudeColumnName = '';
 
         while ($columnRow = mysqli_fetch_assoc($columnsResult)) {
-            if (strpos(strtolower($columnRow['Field']), 'latitude') !== false) {
-                $latitudeColumnName = $columnRow['Field'];
+            $field = $columnRow['Field'];
+            if (preg_match('/latitude/i', $field)) { // Case-insensitive match for latitude
+                $latitudeColumnName = $field;
             }
-            if (strpos(strtolower($columnRow['Field']), 'longitude') !== false) {
-                $longitudeColumnName = $columnRow['Field'];
+            if (preg_match('/longitude/i', $field)) { // Case-insensitive match for longitude
+                $longitudeColumnName = $field;
             }
         }
 
@@ -68,7 +74,6 @@ while ($row = mysqli_fetch_array($result)) {
 
 // If there are markers, display the map
 if (!empty($markers)) {
-    echo '<div id="map" style="width: 100%; height: 80vh;"></div>';
     echo '<script>';
     echo 'var markers = ' . json_encode($markers) . ';';
     echo '</script>';
@@ -77,21 +82,71 @@ if (!empty($markers)) {
 }
 ?>
 
-
-
-
-
 <script>
-        function initMap() {
-            var mapOptions = {
-                zoom: 12,
-                center: {lat: <?php echo $markers[0]['lat']; ?>, lng: <?php echo $markers[0]['lng']; ?>},
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
+    var map;
 
-            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    function initMap() {
+        var mapOptions = {
+            zoom: 12,
+            center: {lat: <?php echo $markers[0]['lat']; ?>, lng: <?php echo $markers[0]['lng']; ?>},
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
 
-            markers.forEach(function(markerData) {
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+        displayMarkers();
+    }
+
+    function displayMarkers() {
+        markers.forEach(function(markerData) {
+            var marker = new google.maps.Marker({
+                position: {lat: parseFloat(markerData.lat), lng: parseFloat(markerData.lng)},
+                map: map,
+                title: "Marker"
+            });
+
+            var contentString = '<div style="width: 200px; height:200px;">';
+            contentString += '<h3>' + markerData.table + '</h3>';
+            contentString += '<ul>';
+            for (var key in markerData.data) {
+                contentString += '<li><strong>' + key + ':</strong> ' + markerData.data[key] + '</li>';
+            }
+            contentString += '</ul>';
+            contentString += '</div>';
+
+            var infoWindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
+            marker.addListener('mouseover', function() {
+                infoWindow.open(map, marker);
+            });
+
+            marker.addListener('mouseout', function() {
+                infoWindow.close();
+            });
+        });
+    }
+
+    function searchMarkers() {
+        var searchInput = document.getElementById('searchInput').value.toLowerCase();
+
+        var searchResultsFound = false; // Flag to track if any search results are found
+
+        // Clear existing markers from the map
+        clearMarkers();
+
+        // Filter markers based on the search input
+        markers.forEach(function(markerData) {
+            var markerInfo = markerData.table.toLowerCase() + ' ';
+            for (var key in markerData.data) {
+                markerInfo += markerData.data[key].toLowerCase() + ' ';
+            }
+
+            if (markerInfo.includes(searchInput)) {
+                searchResultsFound = true; // Set flag to true if at least one search result is found
+
+                // Show marker
                 var marker = new google.maps.Marker({
                     position: {lat: parseFloat(markerData.lat), lng: parseFloat(markerData.lng)},
                     map: map,
@@ -118,10 +173,23 @@ if (!empty($markers)) {
                 marker.addListener('mouseout', function() {
                     infoWindow.close();
                 });
-            });
-        }
-    </script>
+            }
+        });
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-dFHYjTqEVLndbN2gdvXsx09jfJHmNc8&callback=initMap"></script>
+        // If no search results found, display a message
+        if (!searchResultsFound) {
+            alert('No matching markers found.');
+        }
+    }
+
+    function clearMarkers() {
+        // Loop through all markers and remove them from the map
+        markers.forEach(function(marker) {
+            marker.setMap(null);
+        });
+    }
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-dFHYjTqEVLndbN2gdvXsx09jfJHmNc8&callback=initMap"></script>
 </body>
 </html>
