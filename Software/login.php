@@ -25,6 +25,7 @@ if ($result) {
         $_SESSION['login'] = true;
 
         $_SESSION['user_id'] = $row['user_id']; 
+        $_SESSION['department_id'] = $row['department_id'];
         $_SESSION['email'] = $row['email'];
         $_SESSION['type'] = $row['role'];
 
