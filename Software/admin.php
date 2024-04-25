@@ -184,9 +184,9 @@ ob_start();
                             <div class="dropdown">
                                 <button class="btn btn-primary" onclick="toggleDropdown(this)">Action</button>
                                 <div class="dropdown-menu" id="dropdownMenu">
-                                    <a class="dropdown-item" href='index.php?action=verify&email=<?php echo $row['email']; ?>'>Verify</a>
-                                    <a class="dropdown-item" href='index.php?action=reject&email=<?php echo $row['email']; ?>'>Reject</a>
-                                    <a class="dropdown-item" href='index.php?action=block&email=<?php echo $row['email']; ?>'>Block</a>
+                                    <a class="dropdown-item" href='admin.php?action=verify&email=<?php echo $row['email']; ?>'>Verify</a>
+                                    <a class="dropdown-item" href='admin.php?action=reject&email=<?php echo $row['email']; ?>'>Reject</a>
+                                    <a class="dropdown-item" href='admin.php?action=block&email=<?php echo $row['email']; ?>'>Block</a>
                                 </div>
                             </div>
                     <?php
@@ -221,7 +221,7 @@ ob_start();
                         if (isset($query)) {
                             $result = mysqli_query($conn1, $query);
                             if ($result) {
-                                echo "<script>location.href='index.php'</script>";
+                                echo "<script>location.href='admin.php'</script>";
                             } else {
                                 echo "Error updating status: " . mysqli_error($conn1);
                             }
