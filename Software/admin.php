@@ -7,7 +7,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] == false || $_SESSION['admi
    $servername = "localhost";
    $username = "root";
    $password = "";
-   $dbname = "assets_2";
+   $dbname = "assets";
    
    
    $conn1 = new mysqli($servername, $username, $password, $dbname);
