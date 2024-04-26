@@ -7,7 +7,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] == false || $_SESSION['admi
    $servername = "localhost";
    $username = "root";
    $password = "";
-   $dbname = "assets";
+   $dbname = "assets_2";
    
    
    $conn1 = new mysqli($servername, $username, $password, $dbname);
@@ -139,7 +139,19 @@ ob_start();
                         </div>
                     </div>
                     <?php
-                    $sql = "SELECT * FROM users";
+                    $sql = "SELECT  
+                    u.forename, 
+                    u.surname, 
+                    u.email, 
+                    u.role, 
+                    u.registered_at, 
+                    u.status, 
+                    d.department
+                FROM 
+                    users u
+                JOIN 
+                    departments d ON u.department_id = d.department_id;
+                ";
                     $result = mysqli_query($conn1, $sql);
 
                     if (mysqli_num_rows($result) > 0) {
@@ -151,7 +163,6 @@ ob_start();
                                             <th>Forename</th>
                                             <th>Surname</th>
                                             <th>Email</th>
-                                            <th>Password</th>
                                             <th>Role</th>
                                             <th>Department</th>
                                             <th>Registered At</th>
@@ -165,7 +176,6 @@ ob_start();
                             echo "<td>{$row['forename']}</td>";
                             echo "<td>{$row['surname']}</td>";
                             echo "<td>{$row['email']}</td>";
-                            echo "<td>{$row['password']}</td>";
                             echo "<td>{$row['role']}</td>";
                             echo "<td>{$row['department']}</td>";
                             echo "<td>{$row['registered_at']}</td>";
