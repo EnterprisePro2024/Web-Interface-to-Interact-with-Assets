@@ -78,6 +78,45 @@ try {
                     }
                 }
 
+                 // Read CSV file and insert data into the table
+                 fgetcsv($file); // Skip the header row
+                 while (($data = fgetcsv($file)) !== FALSE) {
+                     if (count($data) != count($columns)) {
+                         die("Error: Number of columns in CSV does not match the number of columns in the table");
+                     }
+ 
+                     if (!$stmt->bind_param(str_repeat("s", count($data)), ...$data)) {
+                         die("Error binding parameters: " . $stmt->error);
+                     }
+ 
+                     if (!$stmt->execute()) {
+                         die("Error inserting data: " . $stmt->error);
+                     }
+                 }
+                 // Gets file information 
+                 $fileName = basename($_FILES["fileToUpload"]["name"]);
+                 $uploadedByUserId = $_SESSION['user_id'];
+                 $uploadedByDepartmentId = $_SESSION['department_id'];
+ 
+                 // SQL INSERT statement to input file information into the `files` table
+                 $sqlInsertFile = "INSERT INTO files (file_name, file_path, uploaded_by_user_id, uploaded_by_department_id) 
+                   VALUES (?, ?, ?, ?)";
+ 
+                 // Prepares statement to execute the file insertion query
+                 $stmtFile = $conn->prepare($sqlInsertFile);
+                 if ($stmtFile === false) {
+                     die("Error preparing file insert statement: " . $conn->error);
+                 }
+                 
+                 // Bind parameters and execute
+                 if (!$stmtFile->bind_param("ssii", $fileName, $target_file, $uploadedByUserId, $uploadedByDepartmentId)) {
+                     die("Error binding file parameters: " . $stmtFile->error);
+                 }
+                 
+                 if (!$stmtFile->execute()) {
+                     die("Error inserting file data: " . $stmtFile->error);
+                 }
+
                 fclose($file);
                 $conn = null;
 
