@@ -128,7 +128,7 @@ $connection->close();
     <title>Share CSV File</title>
     <link rel="stylesheet" href="/assets/stylesheet.css">
     <style>
-        /* temporary CSS for forms and shared csv files table - can change and adjust this in the css styelsheet */
+        /* temporary CSS for forms and shared csv files table - can change and adjust this in the css stylesheet */
         table {
             width: 100%;
             border-collapse: collapse;
