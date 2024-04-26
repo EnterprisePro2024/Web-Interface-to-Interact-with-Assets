@@ -18,6 +18,10 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] == false) {
     <?php
         include("phpdb.php");
     ?>
+
+    <?php
+        include("map.php");
+    ?>
     
 </body>
 
