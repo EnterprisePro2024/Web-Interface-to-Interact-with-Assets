@@ -24,9 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
             
-            $query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department`, `department_id`) VALUES (?, ?, ?, ?, ?, ?)";
+            $query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department_id`) VALUES (?, ?, ?, ?, ?)";
             $stmt = mysqli_prepare($connection, $query);
-            mysqli_stmt_bind_param($stmt, "sssssi", $fname, $sname, $email, $hashed_password, $department, $department_id);
+            mysqli_stmt_bind_param($stmt, "ssssi", $fname, $sname, $email, $hashed_password, $department_id);
 
             try {
                 if (mysqli_stmt_execute($stmt)) {
