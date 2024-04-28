@@ -13,7 +13,7 @@
 
     <div class="log">
        
-    Rest link sent, please check your inbox
+    Reset link sent, please check your inbox
 
     </div>
 
