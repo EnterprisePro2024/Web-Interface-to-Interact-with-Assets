@@ -26,7 +26,7 @@ require 'vendor/autoload.php';
         $mail->addAddress($email, $fname . ' ' . $sname);
 
         // Email subject
-        $subject = "Registration Confirmation";
+        $subject = "Account Verified";
 
         // Email message
         $message = "Dear User,\r\n\r\n";
