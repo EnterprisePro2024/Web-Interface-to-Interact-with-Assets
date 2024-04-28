@@ -5,6 +5,31 @@
 <head>
     <Title>FAQs|Bradford Council</Title>
     <link rel="stylesheet" href="stylesheet.css">
+
+    <style>
+        .faq_container {
+            max-width: 800px;
+            margin: 0 auto 0 20px;
+            padding: 20px;
+        }
+
+        .faq_question {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .faq_answer_container {
+            padding: 10px;
+            border-left: 5px solid #007bff;
+            margin-bottom: 20px;
+        }
+
+        .faq_answer {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body class="main">
@@ -23,14 +48,14 @@
         <div class="faq">
             <div class="faq_question">How do I upload assets with geographical data?</div>
             <div class="faq_answer_container">
-                <div class="faq_answer">To upload assets, you first need to register and wait for approval from the admin. Once approved, log in to your account, click on the "Assets" tab at the top of the page, and then click the "Upload CSV File" button. Select the file containing the assets you want to upload.</div>
+                <div class="faq_answer">To upload assets, you first need to register and wait for approval from the admin. Once approved, log in to your account, click on the "Upload" tab at the top of the page, and then click the "Upload CSV File" button. Select the file containing the assets you want to upload.</div>
             </div>
         </div>
 
         <div class="faq">
             <div class="faq_question">Can I view assets belonging to other departments?</div>
             <div class="faq_answer_container">
-                <div class="faq_answer">No, you cannot view assets belonging to other departments. Each department has access only to its own assets. Only the admin can view assets across all departments.</div>
+                <div class="faq_answer">No, by default you can only view assets managed and uploaded by your department, however, exceptions apply to files that have been shared with your department.</div>
             </div>
         </div>
 
@@ -58,7 +83,7 @@
         <div class="faq">
             <div class="faq_question">How can I contact the admin for assistance?</div>
             <div class="faq_answer_container">
-                <div class="faq_answer">You can contact the admin by sending an email to admin@gmail.com. Please include your username and a detailed description of your issue for faster assistance.</div>
+                <div class="faq_answer">You can contact the admin by sending an email to admin@bradford.gov. Please include your username and a detailed description of your issue for faster assistance.</div>
             </div>
         </div>
 
