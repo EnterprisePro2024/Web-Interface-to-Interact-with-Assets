@@ -29,7 +29,7 @@ if (strtotime($user["reset_token_expires_at"]) <= time()) {
 
 
 
-$password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
+$password_hash = password_hash($_POST["password"], PASSWORD_BCRYPT);
 
 $sql = "UPDATE users
         SET password = ?,
