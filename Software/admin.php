@@ -216,6 +216,7 @@ ob_start();
                         switch ($action) {
                             case 'verify':
                                 $query = "UPDATE users SET status='Verified' WHERE email='$email'";
+                                require_once 'verif-email.php';
                                 break;
                             case 'reject':
                                 $query = "UPDATE users SET status='Rejected' WHERE email='$email'";

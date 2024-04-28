@@ -30,7 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             try {
                 if (mysqli_stmt_execute($stmt)) {
+                    
                     header("Location: home.php");
+
+                    require_once 'reg-email.php';
                     exit();
                 } else {
                     echo "ERROR: Could not execute query.";
