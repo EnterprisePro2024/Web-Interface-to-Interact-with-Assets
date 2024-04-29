@@ -107,6 +107,10 @@ mysqli_close($connection);
         Have any questions? <a href="faqs.php">Visit FAQS here</a>
     </div>
 
+    <div class="fp-text">
+        <a href="forgottenpass.php">Forgotten Password?</a>
+    </div>
+
 </body>
 
 <?php require_once("includes/footer.php"); ?>
