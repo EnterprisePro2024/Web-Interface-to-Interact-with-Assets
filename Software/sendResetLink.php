@@ -1,4 +1,5 @@
 <?php
+require_once("includes/setup.php");
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -32,7 +33,7 @@ if ($mysqli->affected_rows) {
     $mail->Subject = "Password Reset";
     $mail->Body = <<<END
 
-    Click <a href="https://localhost/Software/resetpassword.php?token=$token">here</a> 
+    Click <a href="https://localhost/Web-Interface-to-Interact-with-Assets-finalbranch/Software/resetpassword.php?token=$token">here</a> 
     to reset your password.
 
     END;

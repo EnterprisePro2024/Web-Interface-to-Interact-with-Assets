@@ -1,5 +1,5 @@
 <?php
-
+require_once("includes/setup.php");
 $token = $_POST["token"];
 
 $token_hash = hash("sha256", $token);

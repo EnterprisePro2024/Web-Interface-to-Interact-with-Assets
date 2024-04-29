@@ -4,9 +4,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require "C:\Users\Shass\OneDrive - University of Bradford\New folder\htdocs\Software\PHPMailer.php";
-require "C:\Users\Shass\OneDrive - University of Bradford\New folder\htdocs\Software\Exception.php";
-require "C:\Users\Shass\OneDrive - University of Bradford\New folder\htdocs\Software\SMTP.php";
+require 'vendor/autoload.php';
 
 // Create a PHPMailer instance
 $mail = new PHPMailer(true);
@@ -14,8 +12,6 @@ $mail = new PHPMailer(true);
 // Set mailer to use SMTP
 $mail->isSMTP();
 
-// Enable SMTP debugging (if needed)
-// $mail->SMTPDebug = SMTP::DEBUG_SERVER;
 
 // SMTP authentication
 $mail->SMTPAuth = true;
@@ -23,7 +19,7 @@ $mail->SMTPAuth = true;
 // SMTP host
 $mail->Host = "smtp.gmail.com";
 
-// SMTP port (usually 587)
+// SMTP port 
 $mail->Port = 587;
 
 // SMTP username
