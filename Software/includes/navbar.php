@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="stylesheet.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/stylesheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous">
 </head>
 
 <nav>
@@ -50,13 +50,13 @@
         <button class="dropdown-btn">Text-to-Speech</button>
         <div class="dropdown-content">
             <!-- Dropdown content for text-to-speech -->
-            <a href="#" onclick="slowDownSpeech()">Slow Down</a>
-            <a href="#" onclick="startSpeech()">Start</a>
-            <a href="#" onclick="playSpeech()">Play</a>
-            <a href="#" onclick="pauseSpeech()">Pause</a>
-            <a href="#" onclick="stopSpeech()">Stop</a>
-            <a href="#" onclick="speedUpSpeech()">Speed Up</a>
-            <a href="#" onclick="speakSelectedText()">Selected Text</a>
+            <a href="#" onclick="startSpeech()">Play all text</a>
+            <a href="#" onclick="speedUpSpeech()" aria-label="Increase Speed"><i class="fas fa-fast-forward"></i></a>
+            <a href="#" onclick="playSpeech()" aria-label="Play"><i class="fa-solid fa-play"></i></a>
+            <a href="#" onclick="pauseSpeech()" aria-label="Pause text"><i class="fa-solid fa-pause"></i></a>
+            <a href="#" onclick="stopSpeech()" aria-label="Stop text"><i class="fa-solid fa-stop"></i></a>
+            <a href="#" onclick="slowDownSpeech()" aria-label="Decrease Speed"><i class="fas fa-fast-backward"></i></a>
+            <a href="#" onclick="speakSelectedText()">Play selected text</a>
         </div>
     </div>
 
@@ -66,155 +66,25 @@
         <a href="https://www.youtube.com/user/bradfordmdcvideo"><i class="fab fa-youtube"></i></a>
         </div>
     </div>
-</div>
   
-<div class="search-container">
+    <div class="search-container">
     <div class="search">
         <form action="/search-results" method="get">
             <label id="searchLabel" for="query"></label>
-            <input type="text" name="query" id="query" placeholder="Search this site">
+            <input type="text" name="query" id="query" placeholder="search this site">
             <button type="submit">
                 <i class="fa-solid fa-magnifying-glass fa-flip-horizontal"></i>
             </button>
         </form>
     </div>
-</div>
     </div>
-
-</nav>
-
-
-
 </div>
-
-<style>
-
-
-.navbar-container {
-    display: flex;
-    align-items: center;
-}
-
-.search form {
-    display: flex;
-    position: absolute;
-    align-items: center; 
-}
-
-.search input[type="text"] {
-    font-size: 1.6em;
-    padding: 4px 8px;
-    margin: 0; 
-    border: 1px solid #ccc;
-    border-right: none; 
-    font-weight: 50;
-    vertical-align: bottom;
-    width: 320px;
-    height: 45px;
-}
-
-.search button {
-    background-color: #006871; 
-    border: none; 
-    cursor: pointer; 
-    margin: 0;
-    border: 1px solid #ccc;
-}
-
-.search button i {
-    font-size: 3em; 
-    color: white; 
-    padding: 6px; 
-}
-
-.search{
-    /* display: flex; */
-    align-items: left;
-    top: 95px;
-    right: 500px;
-    position: absolute;
-}
-
-.social-media a {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 23px; 
-    height: 23px; 
-    border-radius: 50%; 
-    background-color: black; 
-    margin-right: 16px; 
-}
-
-.social-media a i {
-    font-size: 14px; 
-    color: white; 
-}
-
-.button-container{
-    display: flex;
-    align-items: center;
-    position: absolute;
-    top: 5px; 
-    right: 80px;
-}
-    
-.dropdown-button {
-    margin-right: 5px;
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-btn {
-    background-color: transparent;
-    color: black;
-    padding: 15px;
-    border: none;
-    cursor: pointer;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 130px;
-    padding: 8px 10px;
-    border-radius: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    text-align: center;
-}
-
-.dropdown-content a {
-    display: inline-block; 
-    margin-right: 15px; 
-    color: black;
-}
-
-.dropdown-btn:hover {
-    text-decoration: underline;
-}
-
-/* Show the dropdown content when hovering or clicking on the button */
-.dropdown-button:hover .dropdown-content {
-    display: block;
-}
-/* Hide Google Translate widget */
-.goog-te-gadget-icon {
-    display: none;
-}
-
-.goog-te-banner-frame.skiptranslate {
-    display: none !important;
-}
-</style>
-
+</nav>
 
 <script>
     //function to change font size
     function changeFontSize(option) {
-        var currentFontSize = parseInt(document.documentElement.style.fontSize) || 16; // Default font size is 16px
+        var currentFontSize = parseInt(document.documentElement.style.fontSize) || 16; 
         var newFontSize;
 
         switch (option) {
@@ -239,17 +109,16 @@
     var utterance;
 
     function speakText() {
-        var textToSpeak = document.body.innerText; 
+        var textToSpeak = document.body.innerText;
         var speechSynthesis = window.speechSynthesis;
-
         utterance = new SpeechSynthesisUtterance(textToSpeak);
-
         speechSynthesis.speak(utterance);
     }
 
     function startSpeech() {
         stopSpeech(); 
         speakText(); 
+        readButtonLabels();
     }
 
     function pauseSpeech() {
@@ -272,14 +141,14 @@
 
     function speedUpSpeech() {
         if (utterance) {
-            utterance.rate = defaultRate * 2;
+            utterance.rate = utterance.rate * 2;
             window.speechSynthesis.cancel(); 
             window.speechSynthesis.speak(utterance); 
         }
     }
 
     function slowDownSpeech() {
-            utterance.rate = defaultRate * 0.5;
+            utterance.rate = utterance.rate * 0.5;
             window.speechSynthesis.cancel(); 
             window.speechSynthesis.speak(utterance); 
         }
@@ -307,8 +176,19 @@
         return selectedText;
     }
 
+    // Function to read aria labels of buttons 
+    function readButtonLabels() {
+        var buttons = document.querySelectorAll('a[aria-label]');
+        // Loop through each button to check for label - reads label if found
+        buttons.forEach(function(button) {
+        var ariaLabel = button.getAttribute('aria-label');
+        if (ariaLabel) {
+            speakText(ariaLabel);
+            }
+        });
+    }
 
-    //function to translate website language
+    // function to translate website language
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({ 
             pageLanguage: 'en', 
@@ -317,17 +197,20 @@
         }, 'google_translate_element');
     }
 
-// Function to toggle the display of dropdown content
-function toggleDropdown(event) {
+    // function to toggle the display of dropdown content
+    function toggleDropdown(event) {
     var dropdownContent = event.target.nextElementSibling;
     if (dropdownContent.classList.contains('dropdown-content')) {
         dropdownContent.classList.toggle('show');
+        event.stopPropagation();
     }
-}
+    }
 
-// Add event listener to the button container
-document.querySelector('.button-container').addEventListener('click', toggleDropdown)
-</script>
+    // add event listener to button container
+    document.getElementById("dropdown-button").addEventListener("click", function(event) {
+    toggleDropdown(event);
+    });
+    </script>
 
 <script async src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 

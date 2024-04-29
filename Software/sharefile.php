@@ -125,7 +125,7 @@ if ($stmt_shared_csv) {
 <!DOCTYPE html>
 <head>
     <title>Share CSV File</title>
-    <link rel="stylesheet" href="/assets/stylesheet.css">
+    <link rel="stylesheet" href="stylesheet.css">
     <style>
         /* temporary CSS for forms and shared csv files table - can change and adjust this in the css styelsheet */
         table {
@@ -158,7 +158,6 @@ if ($stmt_shared_csv) {
             margin-top: 10px; 
         }
         button:hover {
-            background-color: #0056b3;
             cursor: pointer;
         }
         .file-contents {

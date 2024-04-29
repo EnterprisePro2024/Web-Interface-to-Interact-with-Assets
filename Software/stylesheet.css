@@ -51,6 +51,125 @@ nav ul li a:hover {
 
 }
 
+.navbar-container {
+    display: flex;
+    align-items: center;
+}
+
+.search form {
+    display: flex;
+    position: absolute;
+    align-items: center; 
+}
+
+.search input[type="text"] {
+    font-size: 1.6em;
+    padding: 4px 8px;
+    margin: 0; 
+    border: 1px solid #ccc;
+    border-right: none; 
+    font-weight: 25;
+    vertical-align: bottom;
+    width: 320px;
+    height: 45px;
+}
+
+.search button {
+    background-color: #006871; 
+    border: none; 
+    cursor: pointer; 
+    margin: 0;
+    border: 1px solid #ccc;
+}
+
+.search button i {
+    font-size: 3em; 
+    color: white; 
+    padding: 5.5px; 
+}
+
+.search{
+    align-items: left;
+    top: 100px;
+    right: 450px;
+    position: absolute;
+    line-height: 30px;
+}
+
+.social-media a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 23px; 
+    height: 23px; 
+    border-radius: 50%; 
+    background-color: black; 
+    margin-right: 16px; 
+}
+
+.social-media a i {
+    font-size: 14px; 
+    color: white; 
+}
+
+.button-container{
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 5px; 
+    right: 80px;
+}
+    
+.dropdown-button {
+    margin-right: 5px;
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-btn {
+    background-color: transparent;
+    color: black;
+    padding: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 130px;
+    padding: 8px 10px;
+    border-radius: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    text-align: center;
+}
+
+.dropdown-content a {
+    display: inline-block; 
+    margin-right: 15px; 
+    color: black;
+    font-weight: bold;
+}
+
+.dropdown-btn:hover {
+    text-decoration: underline;
+}
+
+
+.dropdown-button:hover .dropdown-content {
+    display: block;
+}
+
+.goog-te-gadget-icon {
+    display: none;
+}
+
+.goog-te-banner-frame.skiptranslate {
+    display: none !important;
+}
 
 .main {
     background-color: rgb(255, 255, 255);

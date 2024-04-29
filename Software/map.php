@@ -206,5 +206,5 @@ if (!empty($markers)) {
     }
 </script>
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-dFHYjTqEVLndbN2gdvXsx09jfJHmNc8&callback=initMap"></script>
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaSEVfnpFlNS8cKIzd_LnmDo6aRsct5zo&callback=initMap"></script>
 </body>
