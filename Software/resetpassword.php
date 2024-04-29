@@ -43,7 +43,7 @@ if (strtotime($user["reset_token_expires_at"]) <= time()) {
         <form action="processreset.php" method="post">
             <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
             <label class="placeholder">New Password</label>
-            <input class="log input" type="password" id="password" name="password" />
+            <input class="log input" type="password" id="password" name="password" minlength="8"> />
             <button class="log button" type="submit">Change</button>
         </form>
     </div>
