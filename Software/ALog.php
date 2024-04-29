@@ -87,14 +87,16 @@
                     u.forename, 
                     u.surname, 
                     u.user_id, 
-                    f.uploaded_by_user_id,
                     f.file_name,
-                    f.uploaded_at
+                    f.uploaded_at,
+                    s.shared_with_department_id
                 FROM 
                     users u
                 JOIN 
-                    files f ON f.uploaded_by_user_id = u.user_id;
-                ";
+                    files f ON f.uploaded_by_user_id = u.user_id
+                JOIN 
+                    shared_files s ";
+
                     $result = mysqli_query($conn1, $sql);
 
                     if (mysqli_num_rows($result) > 0) {
@@ -107,6 +109,7 @@
                                             <th>Surname</th>
                                             <th>User Id</th>
                                             <th>File Name</th>
+                                            <th>Sent to department Name</th>
                                             <th>Timestamp</th>
                                         </tr>
                                     </thead>
@@ -117,6 +120,15 @@
                             echo "<td>{$row['surname']}</td>";
                             echo "<td>{$row['user_id']}</td>";
                             echo "<td>{$row['file_name']}</td>";
+                            if ($row['shared_with_department_id'] == 1){
+                                echo "<td>Housing</td>";
+                            }
+                            if ($row['shared_with_department_id'] == 2){
+                                echo "<td>Transport and Roads</td>";
+                            }
+                            if ($row['shared_with_department_id'] == 3){
+                                echo "<td>Education and Skills</td>";
+                            }
                             echo "<td>{$row['uploaded_at']}</td>";
                             
                             ?>
