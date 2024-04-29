@@ -16,7 +16,6 @@
             <li><a href="home.php">Home</a></li>
             <li><a href="upload.php">Upload</a></li>
             <li><a href="sharefile.php">Share Files</a></li>
-            <li><a href="map.php">Map</a></li>
             <?php if (isset($_SESSION['admin']) && $_SESSION['admin'] == true) { ?>
                 <li><a href="admin.php">Admin</a></li>
             <?php } ?>
