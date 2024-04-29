@@ -8,6 +8,7 @@ if (!isset($_SESSION['login']) || $_SESSION['login'] == false) {
 $user_id = $_SESSION['user_id'];
 $department_id = $_SESSION['department_id'];
 
+
 // Check if the form is submitted to share files
 if (isset($_POST['share'])) {
     $file_id = $_POST['file_id'];
@@ -25,7 +26,7 @@ if (isset($_POST['share'])) {
                  $_SESSION['file_shared'] = true;
                 // Redirect after successful sharing
                 header("Location: sharefile.php"); 
-                exit; // Stop execution after redirect
+                exit; 
             } 
         } else {
             echo "Error sharing file: " . $stmt_insert->error;
@@ -37,7 +38,7 @@ if (isset($_POST['share'])) {
 } elseif (isset($_POST['share']) && isset($_SESSION['form_submitted'])) {
     // Avoids duplicate submissions 
     header("Location: sharefile.php");
-    exit; // Stop execution after redirect
+    exit; 
 }
 
 // Clears the session variable after the page has loaded
@@ -65,7 +66,7 @@ if ($stmt_files) {
     $stmt_files->close();
 } else {
     echo "Error fetching files: " . $connection->error;
-    exit; // Stop execution if there's an error
+    exit; 
 }
 
 
@@ -89,11 +90,11 @@ if ($stmt_departments) {
     $stmt_departments->close();
 } else {
     echo "Error fetching departments: " . $connection->error;
-    exit; // Stop execution if there's an error
+    exit; 
 }
 
 // Query to retrieve CSV files shared with the user's department and the department that shared it
-$query_shared_csv = "SELECT files.file_name, departments.department AS shared_by_department
+$query_shared_csv = "SELECT files.file_id, files.file_name, departments.department AS shared_by_department
                      FROM files
                      INNER JOIN shared_files ON files.file_id = shared_files.file_id
                      INNER JOIN users ON shared_files.shared_by_user_id = users.user_id
@@ -118,8 +119,6 @@ if ($stmt_shared_csv) {
     echo "Error in preparing SQL statement: " . $connection->error;
 }
 
-
-$connection->close();
 ?>
 
 
@@ -128,7 +127,7 @@ $connection->close();
     <title>Share CSV File</title>
     <link rel="stylesheet" href="/assets/stylesheet.css">
     <style>
-        /* temporary CSS for forms and shared csv files table - can change and adjust this in the css stylesheet */
+        /* temporary CSS for forms and shared csv files table - can change and adjust this in the css styelsheet */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -153,15 +152,30 @@ $connection->close();
             box-sizing: border-box;
         }
         button {
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            margin-top: 10px;
+            width: auto; 
+            padding: px 10px; 
+            font-size: 14px; 
+            margin-top: 10px; 
         }
         button:hover {
             background-color: #0056b3;
+            cursor: pointer;
         }
-        
+        .file-contents {
+            margin-top: 20px; 
+            overflow-x: auto;  
+            padding: 20px; 
+            background-color: #f2f2f2; 
+            border-radius: 5px; 
+        }
+        .message-container {
+        padding: 10px;
+        background-color: #f2dede; 
+        border: 1px solid #ebccd1; 
+        color: #a94442; 
+        margin-bottom: 10px; 
+        border-radius: 5px; 
+        }
     </style>
 </head>
 
@@ -171,7 +185,9 @@ $connection->close();
     <?php
     // Display "No files available for sharing" message under the file selection form
     if (empty($files_array)) {
+        echo '<div class="message-container">';
         echo "<p>No files available for sharing.</p>";
+        echo '</div>';
     }
     ?>
     <form action="sharefile.php" method="post" enctype="multipart/form-data">
@@ -202,7 +218,7 @@ $connection->close();
     // Display success message if file sharing was successful
     if (isset($_SESSION['file_shared']) && $_SESSION['file_shared'] === true) {
         echo "<p>File shared successfully!</p>";
-        unset($_SESSION['file_shared']); // Clear the session variable
+        unset($_SESSION['file_shared']); 
     }
     ?>
 
@@ -216,6 +232,7 @@ $connection->close();
                 <tr>
                     <th>File Name</th>
                     <th>Shared By Department</th>
+                    <th>File</th>
                 </tr>
             </thead>
             <tbody>
@@ -223,13 +240,94 @@ $connection->close();
                     <tr>
                         <td><?php echo $file['file_name']; ?></td>
                         <td><?php echo $file['shared_by_department']; ?></td>
+                        <td>
+                        <?php if (isset($file['file_id'])) : ?>
+                            <a href="sharefile.php?file_id=<?php echo $file['file_id']; ?>">View File</a>
+                            <?php else : ?>
+                                File ID not available
+                                <?php endif; ?>
+                        </td>
+
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     <?php else : ?>
+        <div class="message-container">
         <p>No shared CSV files available for your department.</p>
+        </div>
     <?php endif; ?>
+
+    <!-- Clear File Contents Button -->
+    <button id="clearFileContentsBtn">Clear File Contents</button>
+
+    <!-- File Contents Display Section -->
+    <div class="file-contents" id="fileContents">
+        <?php
+    // Check if file_id is provided in the URL
+    if (isset($_GET['file_id'])) {
+    $file_id = $_GET['file_id'];
+
+    // Query to retrieve file path based on file ID
+    $query_file_path = "SELECT files.file_path 
+                        FROM files 
+                        INNER JOIN shared_files ON files.file_id = shared_files.file_id
+                        WHERE shared_files.file_id = ?";
+    $stmt_file_path = $connection->prepare($query_file_path);
+    if ($stmt_file_path) {
+        $stmt_file_path->bind_param("i", $file_id);
+        $stmt_file_path->execute();
+        $result_file_path = $stmt_file_path->get_result();
+
+        if ($result_file_path->num_rows == 1) {
+            $file_info = $result_file_path->fetch_assoc();
+            $file_path = $file_info['file_path'];
+
+            // Display the contents of the CSV file in a table
+            echo "<h2>View File Contents</h2>";
+
+            echo "<table border='1'>";
+            if (($handle = fopen($file_path, "r")) !== false) {
+                $headers = fgetcsv($handle);
+                    echo "<tr>";
+                    foreach ($headers as $header) {
+                        echo "<th>" . htmlspecialchars($header) . "</th>";
+                    }
+                    echo "</tr>";
+                while (($data = fgetcsv($handle, 1000, ",")) !== false) {
+                    echo "<tr>";
+                    foreach ($data as $cell) {
+                        echo "<td>" . htmlspecialchars($cell) . "</td>";
+                    }
+                    echo "</tr>";
+                }
+                fclose($handle);
+            } else {
+                echo "Error opening CSV file.";
+            }
+            echo "</table>";
+            echo "</div>";
+        } else {
+            echo "File not found!";
+        }
+
+        $stmt_file_path->close();
+    } else {
+        echo "Error fetching file path: " . $connection->error;
+        exit; 
+}
+$connection->close();
+    }
+?>
+</div>
+
+<!-- Clears File Contents -->
+    <script>
+        document.getElementById('clearFileContentsBtn').addEventListener('click', function() {
+            document.getElementById('fileContents').innerHTML = ''; // Clear the contents
+        });
+    </script>
+
 </body>
 
 <?php require_once("includes/footer.php"); ?>
