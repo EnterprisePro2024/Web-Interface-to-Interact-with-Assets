@@ -242,7 +242,7 @@ ob_start();
             </div>
         </div>
     </div>
-    <?php require_once("admin/ALog.php"); ?>
+    <?php require_once("ALog.php"); ?>
 <?php require_once("includes/footer.php"); ?>
 
 <script>
