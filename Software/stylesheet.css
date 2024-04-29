@@ -123,6 +123,14 @@ nav ul li a:hover {
     color: #005192;
 }
 
+.fp-text {
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+    text-decoration: underline;
+    font-size: 14px;
+    color: #005192;
+}
 .opt {
     text-align: right;
 }
