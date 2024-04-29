@@ -10,46 +10,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $department = isset($_POST['department']) ? $_POST['department'] : null;
 
-    
-    $query = "SELECT department_id FROM departments WHERE department = ?";
+    $query = "SELECT COUNT(*) AS email_count FROM users WHERE email = ?";
     $stmt = mysqli_prepare($connection, $query);
-    mysqli_stmt_bind_param($stmt, "s", $department);
+    mysqli_stmt_bind_param($stmt, "s", $email);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $department_id = $row['department_id'];
+    $row = mysqli_fetch_assoc($result);
+    $email_count = $row['email_count'];
 
-        if (!empty($fname) && !empty($sname) && !empty($email) && !empty($password) && !empty($department) && $department !== 'Department') {
-            $hashed_password = password_hash($password, PASSWORD_BCRYPT);
-
-            
-            $query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department_id`) VALUES (?, ?, ?, ?, ?)";
-            $stmt = mysqli_prepare($connection, $query);
-            mysqli_stmt_bind_param($stmt, "ssssi", $fname, $sname, $email, $hashed_password, $department_id);
-
-            try {
-                if (mysqli_stmt_execute($stmt)) {
-                    
-                    header("Location: home.php");
-
-                    require_once 'reg-email.php';
-                    exit();
-                } else {
-                    echo "ERROR: Could not execute query.";
+    if ($email_count > 0) {
+        $_SESSION['error'] = "Email address already exists.";
+    } else {
+    
+        $query = "SELECT department_id FROM departments WHERE department = ?";
+        $stmt = mysqli_prepare($connection, $query);
+        mysqli_stmt_bind_param($stmt, "s", $department);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        if ($result && mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_assoc($result);
+            $department_id = $row['department_id'];
+    
+            if (!empty($fname) && !empty($sname) && !empty($email) && !empty($password) && !empty($department) && $department !== 'Department') {
+                $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+    
+                
+                $query = "INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `department_id`) VALUES (?, ?, ?, ?, ?)";
+                $stmt = mysqli_prepare($connection, $query);
+                mysqli_stmt_bind_param($stmt, "ssssi", $fname, $sname, $email, $hashed_password, $department_id);
+    
+                try {
+                    if (mysqli_stmt_execute($stmt)) {
+                        
+                        header("Location: home.php");
+    
+                        require_once 'reg-email.php';
+                        exit();
+                    } else {
+                        echo "ERROR: Could not execute query.";
+                    }
+                } catch (mysqli_sql_exception $e) {
+                    if ($e->getCode() === 1062) {
+                        $_SESSION['error'] = "Email address already exists.";
+                    } else {
+                        echo "An error occurred: " . $e->getMessage();
+                    }
                 }
-            } catch (mysqli_sql_exception $e) {
-                if ($e->getCode() === 1062) {
-                    $_SESSION['error'] = "Email address already exists.";
-                } else {
-                    echo "An error occurred: " . $e->getMessage();
-                }
+            } else {
+                $_SESSION['error'] = "Invalid email format";
             }
         } else {
-            $_SESSION['error'] = "Invalid email format";
+            $_SESSION['error'] = "Department not found in the database.";
         }
-    } else {
-        $_SESSION['error'] = "Department not found in the database.";
     }
 }
 
