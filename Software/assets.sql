@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Apr 29, 2024 at 02:26 PM
+-- Host: 127.0.0.1:3306
+-- Generation Time: Apr 29, 2024 at 04:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -260,16 +260,66 @@ INSERT INTO `brownfield_register_2023` (`﻿OBJECTID`, `ORGANISATIONURI`, `ORGAN
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `departments`
+--
+
+CREATE TABLE `departments` (
+  `department_id` int(11) NOT NULL,
+  `department` enum('Housing','Education and Skills','Transport and Roads') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `departments`
+--
+
+INSERT INTO `departments` (`department_id`, `department`) VALUES
+(1, 'Housing'),
+(2, 'Transport and Roads'),
+(3, 'Education and Skills');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `files`
+--
+
+CREATE TABLE `files` (
+  `file_id` int(11) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `uploaded_by_user_id` int(11) NOT NULL,
+  `uploaded_by_department_id` int(11) NOT NULL,
+  `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shared_files`
+--
+
+CREATE TABLE `shared_files` (
+  `share_id` int(11) NOT NULL,
+  `file_id` int(11) DEFAULT NULL,
+  `shared_by_user_id` int(11) DEFAULT NULL,
+  `shared_with_department_id` int(11) DEFAULT NULL,
+  `shared_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
-  `forename` varchar(20) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `forename` varchar(30) NOT NULL,
   `surname` varchar(20) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('Admin','General User') NOT NULL DEFAULT 'General User',
-  `department` enum('Housing','Education and Skills','Transport and Roads') NOT NULL,
+  `department_id` int(11) NOT NULL,
   `registered_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` varchar(50) DEFAULT NULL,
   `reset_token_hash` varchar(64) DEFAULT NULL,
@@ -280,12 +330,13 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`forename`, `surname`, `email`, `password`, `role`, `department`, `registered_at`, `status`, `reset_token_hash`, `reset_token_expires_at`) VALUES
-('abc', 'abc', 'abc@gmail.com', '123', 'General User', 'Housing', '2024-03-12 19:06:02', 'Verified', NULL, NULL),
-('admin', 'admin', 'admin@bradford.gov', '$2y$10$RosU4F4XJQGyTfv9wgkWU.TcS3.CgpDcZg8lUYp2M0OOUnX8AGBrm', 'Admin', 'Housing', '2024-04-22 09:58:00', 'Verified', NULL, NULL),
-('Bilal', 'Khan', 'bilalkhan@gmail.com', '$2y$10$Ax4BBe64rVN.emt1EqUsNOMLqHdTrVXW6EaUse24nuwylcGRtGaSm', 'General User', 'Housing', '2024-04-22 09:33:55', 'Verified', NULL, NULL),
-('Jim', 'Bob', 'JB@gmail.com', '$2y$10$lWipX0DLssBbTK4ecM6.uergU4kBYN4okhTPJ2sglgSPRSOBzZDZ.', 'General User', 'Housing', '2024-04-22 09:53:32', NULL, NULL, NULL),
-('subhaan', 'hassan', 'shassa18@bradford.ac.uk', '$2y$10$rxp1Qe7DIQS/sWb06c1WoejN9nn6DktKprmflgddpPqQZV8ipCKoG', 'Admin', 'Housing', '2024-04-25 16:00:11', 'Verified', 'f16713c0ab7d821bb4beaf960f03c1201acc68c2a15455e62a6113ee6c14855d', '2024-04-28 22:18:33');
+INSERT INTO `users` (`user_id`, `forename`, `surname`, `email`, `password`, `role`, `department_id`, `registered_at`, `status`, `reset_token_hash`, `reset_token_expires_at`) VALUES
+(1, '', 'abc', 'abc@gmail.com', '123', 'General User', 0, '2024-03-12 19:06:02', 'Verified', NULL, NULL),
+(2, '', 'Khan', 'bilalkhan@gmail.com', '$2y$10$Ax4BBe64rVN.emt1EqUsNOMLqHdTrVXW6EaUse24nuwylcGRtGaSm', 'General User', 0, '2024-04-22 09:33:55', 'Verified', NULL, NULL),
+(3, '', 'Bob', 'JB@gmail.com', '$2y$10$lWipX0DLssBbTK4ecM6.uergU4kBYN4okhTPJ2sglgSPRSOBzZDZ.', 'General User', 0, '2024-04-22 09:53:32', NULL, NULL, NULL),
+(4, '', 'hassan', 'shassa18@bradford.ac.uk', '$2y$10$rxp1Qe7DIQS/sWb06c1WoejN9nn6DktKprmflgddpPqQZV8ipCKoG', 'Admin', 0, '2024-04-25 16:00:11', 'Verified', 'f16713c0ab7d821bb4beaf960f03c1201acc68c2a15455e62a6113ee6c14855d', '2024-04-28 22:18:33'),
+(6, 'admin', 'admin', 'admin@bradford.gov', '$2y$10$7.ddmjV/aDJZCyF6xSTiq.Y55GyO8dA9ud/hBQWY6LwPzKD2VZQzO', 'General User', 1, '2024-04-29 14:22:30', NULL, NULL, NULL),
+(7, 'Bilal', 'Khan', 'bilalkaan.mail@gmail.com', '$2y$10$DbVOh2LDm6laqxtTJsLJguZRvmiOtbLtMjJIyKQ3.zIlgO/jXOFzG', 'General User', 1, '2024-04-29 14:24:28', NULL, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -301,8 +352,18 @@ ALTER TABLE `allotmentlist2017`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`email`),
+  ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `reset_token_hash` (`reset_token_hash`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
