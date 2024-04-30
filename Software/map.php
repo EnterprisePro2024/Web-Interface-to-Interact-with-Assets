@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,6 +20,14 @@
 <div id="map" style="width: 100%; height: 80vh;"></div>
 
 <?php
+
+require_once("includes/setup.php");
+
+// Redirect to login page if user is not logged in
+if (!isset($_SESSION['login']) || $_SESSION['login'] == false) {
+    header("Location: login.php");
+    exit(); // Stop further execution
+}
 /* Database connection settings */
 $host = 'localhost';
 $user = 'root';
@@ -24,7 +35,17 @@ $pass = '';
 $db = 'assets';
 $mysqli = new mysqli($host, $user, $pass, $db) or die($mysqli->error);
 
+
 $markers = array();
+
+  // Fetch the department of the logged-in user
+  $stmtDept = $connection->prepare("SELECT department_id FROM users WHERE user_id = ?");
+  $stmtDept->bind_param("i", $_SESSION['user_id']);
+  $stmtDept->execute();
+  $resultDept = $stmtDept->get_result();
+  $department = $resultDept->fetch_assoc()['department_id'];
+  
+  $stmtDept->close();
 
 // Get all tables in the database
 $query = "SHOW TABLES";
@@ -54,9 +75,9 @@ while ($row = mysqli_fetch_array($result)) {
         }
 
         if (!empty($latitudeColumnName) && !empty($longitudeColumnName)) {
-            $query = "SELECT * FROM `$table` WHERE `$latitudeColumnName` IS NOT NULL AND `$longitudeColumnName` IS NOT NULL";
+            $query = "SELECT * FROM `$table` WHERE `$latitudeColumnName` IS NOT NULL AND `$longitudeColumnName` IS NOT NULL AND department_id =  $department";
             $dataResult = $mysqli->query($query);
-
+            
             while ($dataRow = mysqli_fetch_assoc($dataResult)) {
                 $rowData = array();
                 foreach ($dataRow as $key => $value) {
@@ -206,5 +227,5 @@ if (!empty($markers)) {
     }
 </script>
 
-<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaSEVfnpFlNS8cKIzd_LnmDo6aRsct5zo&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaSEVfnpFlNS8cKIzd_LnmDo6aRsct5zo&callback=initMap"></script>
 </body>

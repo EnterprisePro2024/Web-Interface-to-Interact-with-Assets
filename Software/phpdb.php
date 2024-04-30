@@ -13,21 +13,35 @@ $password = '';
 $tableData = [];
 $tableName = "";
 
+$ignored_files = ["departments", "shared_files", "files", "users"];
+
 try {
     $conn = new PDO("mysql:host=$hostname;dbname=assets", $username, $password);
     // set the PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
+
+    // Fetch the department ID of the logged-in user
+    $userId = $_SESSION['user_id'];
+    $stmtDept = $conn->prepare("SELECT department_id FROM users WHERE user_id = ?");
+    $stmtDept->bindParam(1, $userId);
+    $stmtDept->execute();
+    $departmentRow = $stmtDept->fetch(PDO::FETCH_ASSOC);
+    $department = $departmentRow['department_id'];
+    // $stmtDept->close();
+
     // Check if a table has been selected
     if(isset($_POST["table"])) {
         $tableName = $_POST["table"];
-        // Fetch data from the selected table
-        $stmt = $conn->prepare("SELECT * FROM `$tableName`"); // Enclose table name in backticks
-        $stmt->execute();
-        $tableData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (!empty($tableName) && !in_array($tableName, $ignored_files)) {
+            // Fetch data from the selected table
+            $stmt = $conn->prepare("SELECT * FROM `$tableName` WHERE department_id = ?");
+            $stmt->bindParam(1, $department);
+            $stmt->execute();
+            $tableData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
     }
 } catch(PDOException $e) {
-    echo $e->getMessage();
+    echo "Error: " . $e->getMessage();
 }
 
 ?>
@@ -56,9 +70,9 @@ try {
 <h2>Display Table Data</h2>
 
 <!-- Form to select table -->
-<form method="post">
+<form method="post" id="tableSelectionForm">
     <!-- Dropdown menu to select table -->
-    <select name="table">
+    <select name="table" id="tableSelect">
         <option value="">Select Table</option>
         <?php
         // Loop through each row of the result set and populate the dropdown menu
@@ -66,13 +80,26 @@ try {
         $tables_result = $conn->query($tables_query);
         while($row = $tables_result->fetch(PDO::FETCH_ASSOC)) {
             $tableName = $row['Tables_in_assets'];
-            echo "<option value='".$tableName."'>".$tableName."</option>";
+            if (!empty($tableName) && !in_array($tableName, $ignored_files)) {
+                echo "<option value='".$tableName."'>".$tableName."</option>";
+            }
         }
         ?>
     </select>
     <!-- Submit button to confirm table selection -->
     <input type="submit" value="OK">
+    <input type="button" value="Reset" onclick="resetTableSelection()">
 </form>
+
+
+<script>
+    function resetTableSelection() {
+        // Clear the selected value of the dropdown menu
+        document.getElementById('tableSelect').selectedIndex = 0;
+        // Hide the table data container
+        document.getElementById('tableDataContainer').style.display = 'none';
+    }
+</script>
 
 <!-- Filter column options -->
 <?php if (!empty($tableData)) : ?>
@@ -93,6 +120,7 @@ try {
         <input type="button" value="Search" onclick="searchAsset()">
     </form>
 <?php endif; ?>
+
 
 <!-- Display selected table data -->
 <div id="tableDataContainer">
@@ -117,10 +145,11 @@ try {
         }
         echo "</table>";
     } elseif ($tableName !== "") {
-        echo "No data available in table: $tableName";
+        echo "No data available in this table.";
     }
     ?>
 </div>
+
 
 <script>
     function applyFilter() {
