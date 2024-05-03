@@ -1,65 +1,144 @@
 <?php
 
-/*** mysql hostname ***/
+require_once("includes/setup.php");
+
+// Redirect to login page if user is not logged in
+if (!isset($_SESSION['login']) || !$_SESSION['login']) {
+    header("Location: login.php");
+    exit(); // Stop further execution
+}
+
+// Database connection parameters
 $hostname = 'localhost';
-
-/*** mysql username ***/
 $username = 'root';
-
-/*** mysql password ***/
 $password = '';
+$database = 'assets';
 
-// Initialize variables to hold table data and selected table name
+// Initialize variables
 $tableData = [];
 $tableName = "";
 
-$ignored_files = ["departments", "shared_files", "files", "users"];
-
 try {
-    $conn = new PDO("mysql:host=$hostname;dbname=assets", $username, $password);
-    // set the PDO error mode to exception
+    $conn = new PDO("mysql:host=$hostname;dbname=$database", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Fetch the department ID of the logged-in user
-    $userId = $_SESSION['user_id'];
-    $stmtDept = $conn->prepare("SELECT department_id FROM users WHERE user_id = ?");
-    $stmtDept->bindParam(1, $userId);
-    $stmtDept->execute();
-    $departmentRow = $stmtDept->fetch(PDO::FETCH_ASSOC);
-    $department = $departmentRow['department_id'];
-    // $stmtDept->close();
+    // Fetch tables relevant to the user's department
+    $department = $_SESSION['department_id'];
+    $stmtTables = $conn->prepare("SHOW TABLES");
+    $stmtTables->execute();
+    $tables = $stmtTables->fetchAll(PDO::FETCH_COLUMN);
 
-    // Check if a table has been selected
-    if(isset($_POST["table"])) {
-        $tableName = $_POST["table"];
-        if (!empty($tableName) && !in_array($tableName, $ignored_files)) {
-            // Fetch data from the selected table
-            $stmt = $conn->prepare("SELECT * FROM `$tableName` WHERE department_id = ?");
-            $stmt->bindParam(1, $department);
-            $stmt->execute();
-            $tableData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Filter tables based on the presence of department_id column and exclude users and files tables
+    $filteredTables = [];
+    foreach ($tables as $table) {
+        if ($table !== 'users' && $table !== 'files' && $table !== 'departments') {
+            // Check if the table has a 'department_id' column
+            $stmtCheck = $conn->prepare("SHOW COLUMNS FROM `$table` LIKE 'department_id'");
+            $stmtCheck->execute();
+            if ($stmtCheck->rowCount() > 0) {
+                // If the table has a 'department_id' column, check if it matches the user's department
+                $stmtDepartment = $conn->prepare("SELECT * FROM `$table` WHERE department_id = ?");
+                $stmtDepartment->execute([$department]);
+                if ($stmtDepartment->rowCount() > 0) {
+                    $filteredTables[] = $table;
+                }
+            }
         }
     }
-} catch(PDOException $e) {
+
+    // Assign filtered tables to $tables variable
+    $tables = $filteredTables;
+
+    // Check if a table has been selected
+    if (isset($_POST["table"])) {
+        $tableName = $_POST["table"];
+        // Fetch data from the selected table
+        $stmt = $conn->prepare("SELECT * FROM `$tableName`");
+        $stmt->execute();
+        $tableData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+} catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
+}
+
+// Process form submission
+if (isset($_POST['submit'])) {
+    try {
+        $tableName = $_POST['table'];
+        $columns = array_keys($_POST);
+        $columns = array_diff($columns, ['table', 'submit']);
+
+        // Prepare SQL query to insert data
+        $query = "INSERT INTO `$tableName` (";
+        $query .= implode(", ", $columns) . ") VALUES (";
+        $query .= implode(", ", array_fill(0, count($columns), "?")) . ")";
+
+        // Prepare statement
+        $stmt = $conn->prepare($query);
+
+        // Bind parameters
+        $i = 1;
+        foreach ($columns as $column) {
+            $stmt->bindParam($i++, $_POST[$column]);
+        }
+
+        // Execute statement
+        $stmt->execute();
+
+        // Refresh table data
+        $stmt = $conn->prepare("SELECT * FROM `$tableName`");
+        $stmt->execute();
+        $tableData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
 }
 
 ?>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Display Table Data</title>
     <style>
-        /* Style for table */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        
+        h2 {
+            margin-top: 0;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        select, input[type="submit"] {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
+
         th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
+            border: 1px solid #ddd;
             padding: 8px;
+            text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
@@ -67,103 +146,100 @@ try {
 </head>
 <body>
 
-<h2>Display Table Data</h2>
+<div class="container">
+    <h2>Display Table Data</h2>
 
-<!-- Form to select table -->
-<form method="post" id="tableSelectionForm">
-    <!-- Dropdown menu to select table -->
-    <select name="table" id="tableSelect">
-        <option value="">Select Table</option>
-        <?php
-        // Loop through each row of the result set and populate the dropdown menu
-        $tables_query = "SHOW TABLES";
-        $tables_result = $conn->query($tables_query);
-        while($row = $tables_result->fetch(PDO::FETCH_ASSOC)) {
-            $tableName = $row['Tables_in_assets'];
-            if (!empty($tableName) && !in_array($tableName, $ignored_files)) {
-                echo "<option value='".$tableName."'>".$tableName."</option>";
-            }
-        }
-        ?>
-    </select>
-    <!-- Submit button to confirm table selection -->
-    <input type="submit" value="OK">
-    <input type="button" value="Reset" onclick="resetTableSelection()">
-</form>
-
-
-<script>
-    function resetTableSelection() {
-        // Clear the selected value of the dropdown menu
-        document.getElementById('tableSelect').selectedIndex = 0;
-        // Hide the table data container
-        document.getElementById('tableDataContainer').style.display = 'none';
-    }
-</script>
-
-<!-- Filter column options -->
-<?php if (!empty($tableData)) : ?>
-    <form id="filterForm">
-        <label>Filter by Column:</label><br>
-        <?php foreach (array_keys($tableData[0]) as $column) : ?>
-            <input type="checkbox" name="columns[]" value="<?php echo $column; ?>"><?php echo $column; ?><br>
-        <?php endforeach; ?>
-        <input type="button" value="Apply Filter" onclick="applyFilter()">
+    <!-- Form to select table -->
+    <form method="post">
+        <!-- Dropdown menu to select table -->
+        <select name="table">
+            <option value="">Select Table</option>
+            <?php foreach ($tables as $table) : ?>
+                <option value="<?php echo $table; ?>"><?php echo $table; ?></option>
+            <?php endforeach; ?>
+        </select>
+        <!-- Submit button to confirm table selection -->
+        <input type="submit" value="OK">
     </form>
-<?php endif; ?>
 
-<!-- Search functionality -->
-<?php if (!empty($tableData)) : ?>
-    <form id="searchForm">
-        <label for="searchInput">Search Asset:</label>
-        <input type="text" id="searchInput" name="searchInput">
-        <input type="button" value="Search" onclick="searchAsset()">
-    </form>
-<?php endif; ?>
+    <!-- Add New Data form -->
+    <?php if (!empty($tableName)) : ?>
+        <div>
+            <h2>Add New Data</h2>
+            <form method="post">
+                <input type="hidden" name="table" value="<?php echo $tableName; ?>">
+                <?php
+                // Get columns of the selected table
+                $stmtColumns = $conn->prepare("SHOW COLUMNS FROM `$tableName`");
+                $stmtColumns->execute();
+                $columns = $stmtColumns->fetchAll(PDO::FETCH_COLUMN);
+                foreach ($columns as $column) : ?>
+                    <label for="<?php echo $column; ?>"><?php echo ucfirst($column); ?>:</label>
+                    <input type="text" name="<?php echo $column; ?>" id="<?php echo $column; ?>"><br>
+                <?php endforeach; ?>
+                <input type="submit" name="submit" value="Add Data">
+            </form>
+        </div>
+    <?php endif; ?>
 
+    <!-- Filter column options -->
+    <?php if (!empty($tableData)) : ?>
+        <form id="filterForm">
+            <label>Filter by Column:</label><br>
+            <?php foreach (array_keys($tableData[0]) as $column) : ?>
+                <input type="checkbox" name="columns[]" value="<?php echo $column; ?>"><?php echo $column; ?><br>
+            <?php endforeach; ?>
+            <input type="button" value="Apply Filter" onclick="applyFilter()">
+        </form>
+    <?php endif; ?>
 
-<!-- Display selected table data -->
-<div id="tableDataContainer">
-    <?php
-    // Check if table data is available
-    if(!empty($tableData)) {
-        // Display table data in an HTML table
-        echo "<table id='dataTable'>";
-        // Display table header
-        echo "<tr>";
-        foreach($tableData[0] as $column => $value) {
-            echo "<th>$column</th>";
-        }
-        echo "</tr>";
-        // Display table rows
-        foreach($tableData as $row) {
-            echo "<tr>";
-            foreach($row as $value) {
-                echo "<td>$value</td>";
-            }
-            echo "</tr>";
-        }
-        echo "</table>";
-    } elseif ($tableName !== "") {
-        echo "No data available in this table.";
-    }
-    ?>
+    <!-- Search functionality -->
+    <?php if (!empty($tableData)) : ?>
+        <form id="searchForm">
+            <label for="searchInput">Search Asset:</label>
+            <input type="text" id="searchInput" name="searchInput">
+            <input type="button" value="Search" onclick="searchAsset()">
+        </form>
+    <?php endif; ?>
+
+    <!-- Display selected table data -->
+    <?php if (!empty($tableData)) : ?>
+        <h2>Table Data</h2>
+        <table id="dataTable">
+            <thead>
+            <tr>
+                <?php foreach (array_keys($tableData[0]) as $column) : ?>
+                    <th><?php echo $column; ?></th>
+                <?php endforeach; ?>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($tableData as $row) : ?>
+                <tr>
+                    <?php foreach ($row as $value) : ?>
+                        <td><?php echo $value; ?></td>
+                    <?php endforeach; ?>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+
 </div>
-
 
 <script>
     function applyFilter() {
         var selectedColumns = document.querySelectorAll('input[name="columns[]"]:checked');
         var table = document.getElementById('dataTable');
         var columnIndex, cell;
-        
+
         // Hide all columns
         for (var i = 0; i < table.rows.length; i++) {
             for (var j = 0; j < table.rows[i].cells.length; j++) {
                 table.rows[i].cells[j].style.display = 'none';
             }
         }
-        
+
         // Show selected columns
         for (var i = 0; i < selectedColumns.length; i++) {
             columnIndex = selectedColumns[i].value;
@@ -185,9 +261,9 @@ try {
         var searchInput = document.getElementById('searchInput').value.toLowerCase();
         var table = document.getElementById('dataTable');
         var cellText;
-        
+
         // Loop through each cell in the table and hide rows that don't match the search input
-        for (var i = 1; i < table.rows.length; i++) { // Start from 1 to skip header row
+        for (var i = 1; i < table.rows.length; i++) {
             var row = table.rows[i];
             var rowMatch = false;
             for (var j = 0; j < row.cells.length; j++) {
